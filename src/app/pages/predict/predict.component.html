@@ -1,0 +1,209 @@
+<div class="min-h-screen bg-slate-950 text-white pt-16">
+
+  <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+
+    <!-- Header -->
+    <div class="text-center mb-10">
+
+      <div
+        class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-teal-500/30 bg-teal-500/10 text-teal-400 text-xs font-medium mb-4">
+
+        <span class="w-1.5 h-1.5 bg-teal-400 rounded-full"></span>
+
+        Hair and Scalp Analysis
+      </div>
+
+      <h1 class="text-3xl sm:text-4xl font-bold tracking-tight mb-3">
+        Upload Your Image
+      </h1>
+
+      <p class="text-slate-400 text-base">
+        Our AI will analyze your Hair and scalp photo and detect possible conditions.
+      </p>
+
+    </div>
+
+    <!-- Upload Card -->
+    <div
+      class="rounded-2xl border border-slate-800 bg-slate-900/60 overflow-hidden mb-5">
+
+      <!-- Upload Area -->
+      <div
+        class="relative p-6 transition-colors duration-200"
+        [ngClass]="dragOver ? 'bg-teal-500/5 border-teal-500/40' : ''"
+
+        (dragover)="$event.preventDefault(); dragOver = true"
+
+        (dragleave)="dragOver = false"
+
+        (drop)="handleDrop($event)">
+
+        <!-- Preview -->
+        <div *ngIf="preview; else uploadArea">
+
+          <div class="relative">
+
+            <img
+              [src]="preview"
+              alt="Preview"
+              class="w-full max-h-64 object-contain rounded-xl border border-slate-700">
+
+            <!-- Remove Button -->
+            <button
+              (click)="handleReset()"
+              class="absolute top-2 right-2 w-7 h-7 rounded-full bg-slate-950/80 border border-slate-700 flex items-center justify-center text-slate-400 hover:text-white hover:border-slate-500 transition-colors duration-150">
+
+              ✕
+
+            </button>
+
+            <div class="mt-3 flex items-center gap-2 text-sm text-slate-400">
+
+              <span class="truncate">
+                {{ image?.name }}
+              </span>
+
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- Upload Template -->
+        <ng-template #uploadArea>
+
+          <button
+            type="button"
+            (click)="fileInput.click()"
+            class="w-full border-2 border-dashed border-slate-700 hover:border-teal-500/50 rounded-xl py-12 flex flex-col items-center gap-3 transition-colors duration-200 group">
+
+            <div
+              class="w-12 h-12 rounded-xl bg-slate-800 group-hover:bg-teal-500/10 border border-slate-700 group-hover:border-teal-500/30 flex items-center justify-center transition-colors duration-200">
+
+              <svg
+                class="w-5 h-5 text-slate-500 group-hover:text-teal-400 transition-colors duration-200"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                stroke-width="1.8">
+
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5">
+                </path>
+
+              </svg>
+
+            </div>
+
+            <div class="text-center">
+
+              <p
+                class="text-sm font-medium text-slate-300 group-hover:text-white transition-colors duration-200">
+
+                Click to upload or drag & drop
+
+              </p>
+
+              <p class="text-xs text-slate-500 mt-1">
+                PNG, JPG, WEBP up to 10MB
+              </p>
+
+            </div>
+
+          </button>
+
+        </ng-template>
+
+        <!-- Hidden Input -->
+        <input
+          #fileInput
+          type="file"
+          accept="image/*"
+          (change)="handleImageChange($event)"
+          class="hidden">
+
+      </div>
+
+      <!-- Actions -->
+      <div class="px-6 pb-6 flex gap-3">
+
+        <!-- Analyze Button -->
+        <button
+          (click)="handleSubmit()"
+          [disabled]="!image || loading"
+          class="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-teal-500 hover:bg-teal-400 disabled:bg-slate-700 disabled:text-slate-500 text-slate-950 font-semibold text-sm transition-all duration-200 shadow-lg shadow-teal-500/20 hover:shadow-teal-400/30 disabled:shadow-none disabled:cursor-not-allowed">
+
+          <span *ngIf="loading">
+            Analyzing...
+          </span>
+
+          <span *ngIf="!loading">
+            Analyze Image
+          </span>
+
+        </button>
+
+        <!-- Reset Button -->
+        <button
+          *ngIf="image || result"
+          (click)="handleReset()"
+          class="px-4 py-2.5 rounded-xl border border-slate-700 hover:border-slate-600 text-slate-400 hover:text-white text-sm font-medium transition-colors duration-200">
+
+          Reset
+
+        </button>
+
+      </div>
+
+    </div>
+
+    <!-- Results -->
+    <div
+      *ngIf="result"
+      class="rounded-2xl border border-slate-800 bg-slate-900/60 overflow-hidden">
+
+      <!-- Result Header -->
+      <div
+        class="px-6 py-4 border-b border-slate-800 flex items-center gap-2">
+
+        <div class="w-2 h-2 bg-teal-400 rounded-full"></div>
+
+        <h2 class="text-sm font-semibold text-white">
+          Analysis Results
+        </h2>
+
+      </div>
+
+      <!-- Result Content -->
+      <div class="p-6 space-y-4">
+
+        <div
+          *ngFor="let item of resultEntries"
+          class="flex flex-col sm:flex-row sm:items-start gap-1.5 sm:gap-4 pb-4 last:pb-0 border-b border-slate-800/60 last:border-0">
+
+          <!-- Key -->
+          <span
+            class="text-xs font-semibold text-teal-400 uppercase tracking-widest sm:w-40 flex-shrink-0 pt-0.5">
+
+            {{ item[0].replaceAll('_', ' ') }}
+
+          </span>
+
+          <!-- Value -->
+          <span class="text-slate-300 text-sm leading-relaxed">
+
+            {{ item[1] }}
+
+          </span>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
