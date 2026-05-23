@@ -10,18 +10,18 @@ export class HomeComponent {
 
   features = [
     {
-      title: 'Image Upload',
+      title: 'Smart Upload',
       desc: 'Simply upload a photo of your hair/scalp for instant analysis.',
       icon: 'image'
     },
     {
-      title: 'AI Detection',
-      desc: 'Advanced model identifies conditions with high accuracy.',
+      title: 'AI Diagnosis',
+      desc: 'Advanced AI model identifies conditions with high accuracy.',
       icon: 'ai'
     },
     {
-      title: 'Instant Report',
-      desc: 'Get a detailed analysis with actionable recommendations.',
+      title: 'Detailed Insights',
+      desc: 'Get complete analysis with actionable care recommendations.',
       icon: 'report'
     }
   ];
